@@ -6,6 +6,7 @@ import { PrismaAdapter } from '../../../lib/auth/prisma-adapter'
 
 export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'], res: NextApiResponse | NextPageContext['res']): NextAuthOptions {
   return {
+    debug: true,
     adapter: PrismaAdapter(req, res), //Adapter criado do zero para fins de estudo e porque é diferente do padrão do next auth
     providers: [
       GoogleProvider({

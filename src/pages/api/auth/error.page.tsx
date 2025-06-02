@@ -1,13 +1,24 @@
 import { useRouter } from 'next/router'
 
-export default function AuthErrorPage() {
-  const { query } = useRouter()
+const errorMessages: Record<string, string> = {
+  OAuthSignin: 'Erro ao iniciar a autenticação OAuth.',
+  OAuthCallback: 'Erro no callback da autenticação OAuth.',
+  OAuthCreateAccount: 'Erro ao criar conta via OAuth.',
+  AccessDenied: 'Acesso negado.',
+}
+
+export default function AuthError() {
+  const router = useRouter()
+  const rawError = router.query.error
+
+  // Garante que error é string simples
+  const error = Array.isArray(rawError) ? rawError[0] : rawError ?? ''
 
   return (
-    <div style={{ padding: 32 }}>
-      <h1>Erro ao fazer login</h1>
-      {query?.error && <p>Tipo de erro: {query.error}</p>}
-      <p>Tente novamente ou entre em contato com o suporte.</p>
+    <div>
+      <h1>Erro na autenticação</h1>
+      <p>{errorMessages[error] ?? 'Erro desconhecido.'}</p>
+      <pre>{JSON.stringify(error, null, 2)}</pre>
     </div>
   )
 }

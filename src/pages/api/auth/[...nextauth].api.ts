@@ -33,6 +33,9 @@ export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'
         },
       }),
     ],
+    pages: {
+      error: '/auth/error',
+    },
     callbacks: {
       // Verifica o retorno do google pra ver se o usuário autorizou o uso do calendário
       async signIn({ account }) {

@@ -8,7 +8,7 @@ export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'
   return {
     debug: true,
     pages: {
-      error: '/auth/error',
+      error: '/api/auth/error',
     },
     adapter: PrismaAdapter(req, res), //Adapter criado do zero para fins de estudo e porque é diferente do padrão do next auth
     providers: [

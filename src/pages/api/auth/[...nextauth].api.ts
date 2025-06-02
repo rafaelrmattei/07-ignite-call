@@ -6,21 +6,15 @@ import { PrismaAdapter } from '../../../lib/auth/prisma-adapter'
 
 export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'], res: NextApiResponse | NextPageContext['res']): NextAuthOptions {
   return {
-    debug: true,
-    pages: {
-      error: '/api/auth/error',
-    },
-    adapter: PrismaAdapter(req, res), //Adapter criado do zero para fins de estudo e porque é diferente do padrão do next auth
+    adapter: PrismaAdapter(req, res),
     providers: [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID ?? '',
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
         authorization: {
           params: {
-            //Pego no google - urls de escopos exigidos pela nossa aplicação que são necessários autorização
             scope:
               'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
-            //Pro google enviar o refreshtoken para atualizar o acesso do usuário
             prompt: 'consent',
             access_type: 'offline',
             response_type: 'code',
@@ -38,35 +32,17 @@ export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'
       }),
     ],
     callbacks: {
-      // Verifica o retorno do google pra ver se o usuário autorizou o uso do calendário
       async signIn({ account }) {
-        // if (!account?.scope?.includes('https://www.googleapis.com/auth/calendar')) {
-        //   return '/register/connect-calendar/?error=permissions'
-        // }
-
-        // return true //Se der erro manda pra connect-calendar com error=permissions, senão retorna que está tudo certo
-
-        try {
-          if (!account?.scope?.includes('https://www.googleapis.com/auth/calendar')) {
-            return '/register/connect-calendar/?error=permissions'
-          }
-          return true
-        } catch (error) {
-          console.error('Erro no callback signIn:', error)
-          return false // bloqueia login em caso de erro
+        if (!account?.scope?.includes('https://www.googleapis.com/auth/calendar')) {
+          return '/register/connect-calendar/?error=permissions'
         }
+
+        return true
       },
       async session({ session, user }) {
-        // return {
-        //   ...session,
-        //   user,
-        // }
-
-        try {
-          return { ...session, user }
-        } catch (error) {
-          console.error('Erro no callback session:', error)
-          return session // ou retorne null se preferir bloquear
+        return {
+          ...session,
+          user,
         }
       },
     },

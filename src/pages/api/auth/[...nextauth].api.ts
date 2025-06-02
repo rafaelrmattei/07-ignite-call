@@ -7,6 +7,9 @@ import { PrismaAdapter } from '../../../lib/auth/prisma-adapter'
 export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'], res: NextApiResponse | NextPageContext['res']): NextAuthOptions {
   return {
     debug: true,
+    pages: {
+      error: '/auth/error',
+    },
     adapter: PrismaAdapter(req, res), //Adapter criado do zero para fins de estudo e porque é diferente do padrão do next auth
     providers: [
       GoogleProvider({
@@ -34,9 +37,6 @@ export function buildNextAuthOptions(req: NextApiRequest | NextPageContext['req'
         },
       }),
     ],
-    pages: {
-      error: '/auth/error',
-    },
     callbacks: {
       // Verifica o retorno do google pra ver se o usuário autorizou o uso do calendário
       async signIn({ account }) {

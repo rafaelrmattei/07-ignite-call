@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { api } from '../../../lib/axios'
-import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
+import { buildNextAuthOptions } from '../../api/auth/[...nextauth]'
 import { Container, Header } from '../styles'
 import { FormAnnotation, ProfileBox } from './styles'
 
